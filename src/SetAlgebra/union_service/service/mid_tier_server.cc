@@ -68,11 +68,11 @@ ThreadSafeQueue<bool> kill_notify;
    or remove an element from the map.*/
 std::mutex response_map_mutex, thread_id, intersection_server_id_mutex, map_coarse_mutex;
 std::vector<mutex_wrapper> intersection_srv_conn_mutex;
-std::map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
+std::unordered_map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
 int get_profile_stats = 0;
 bool first_req = false;
 
-CompletionQueue* intersection_srv_cq = new CompletionQueue();
+CompletionQueue* intersection_srv_cq ;
 
 bool kill_signal = false;
 
@@ -282,10 +282,10 @@ class IntersectionServiceClient {
             : stub_(IntersectionService::NewStub(channel)) {}
         /* Assambles the client's payload, sends it and presents the response back
            from the server.*/
-        void GetPostingLists(const uint32_t intersection_server_id,
+        void GetPostingLists   (const uint32_t intersection_server_id,
                 const bool util_present,
                 uint64_t request_id,
-                IntersectionRequest &request_to_intersection_srv)
+                IntersectionRequest &request_to_intersection_srv) __attribute__((noinline))
         {
             // Create RCP request by adding queries, point IDs, and number of NN.
             CreateIntersectionServiceRequest(intersection_server_id,
@@ -666,6 +666,7 @@ class IntersectionServiceClient {
 
 
         int main(int argc, char** argv) {
+            intersection_srv_cq = new CompletionQueue();
             if (argc == 7) {
                 number_of_intersection_servers = atoi(argv[1]);
                 intersection_server_ips_file = argv[2];

@@ -106,6 +106,7 @@ void CreateBucketServiceRequest(const MultiplePoints &queries,
     {
         PointIdList* point_id_single_query = request->add_maybe_neighbor_list();
         int num_point_ids = point_ids[i].size();
+        // printf("num_point_ids: %d\n",num_point_ids );
         for(int j = 0; j < num_point_ids; j++)
         {
             point_id_single_query->add_point_id(point_ids[i][j]);

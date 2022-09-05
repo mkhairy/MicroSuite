@@ -6,6 +6,7 @@
 
 using namespace mlpack;
 using namespace mlpack::cf;
+using namespace mlpack::data;
 
 std::mutex test;
 
@@ -13,7 +14,10 @@ std::mutex test;
 void CreateDatasetFromFile(std::string dataset_file_name, 
         Matrix* dataset)
 {   
-    data::Load(dataset_file_name, *dataset);
+    Load(dataset_file_name, *dataset);
+    std::cout<< "size : " << dataset->n_rows << "\n";
+    std::cout<< "size : " << dataset->n_cols << "\n";
+    std::cout<< "size : " << dataset->n_elem << "\n";
 }
 
 void UnpackCFServiceRequest(const collaborative_filtering::CFRequest &request,
@@ -24,7 +28,7 @@ void UnpackCFServiceRequest(const collaborative_filtering::CFRequest &request,
 }
 
 void CalculateRating(const Request &user_item,
-        CF* cf,
+        CFType* cf,
         float* rating)
 {
     *rating = cf->Predict(user_item.user, user_item.item);

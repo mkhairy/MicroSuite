@@ -72,11 +72,11 @@ ThreadSafeQueue<bool> kill_notify;
    or remove an element from the map.*/
 std::mutex response_map_mutex, thread_id, lookup_server_id_mutex, map_coarse_mutex;
 std::vector<mutex_wrapper> lookup_srv_conn_mutex;
-std::map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
+std::unordered_map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
 int get_profile_stats = 0;
 bool first_req = false;
 
-CompletionQueue* lookup_srv_cq = new CompletionQueue();
+CompletionQueue* lookup_srv_cq ;
 
 bool kill_signal = false;
 
@@ -685,6 +685,7 @@ class LookupServiceClient {
 
 
         int main(int argc, char** argv) {
+            lookup_srv_cq = new CompletionQueue();
             if (argc == 8) {
                 number_of_lookup_servers = atoi(argv[1]);
                 lookup_server_ips_file = argv[2];

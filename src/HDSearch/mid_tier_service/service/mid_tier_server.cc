@@ -78,11 +78,11 @@ ThreadSafeQueue<bool> kill_notify;
    or remove an element from the map.*/
 std::mutex response_map_mutex, thread_id, bucket_server_id_mutex, map_coarse_mutex;
 std::vector<mutex_wrapper> bucket_conn_mutex;
-std::map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
+std::unordered_map<uint64_t, std::unique_ptr<std::mutex> > map_fine_mutex;
 int get_profile_stats = 0;
 bool first_req = false;
 
-CompletionQueue* bucket_cq = new CompletionQueue();
+CompletionQueue* bucket_cq = (NULL);
 
 bool kill_signal = false;
 
@@ -137,6 +137,7 @@ class ServerImpl final {
                 thread_id.lock();
                 int tid_local = ++tid;
                 thread_id.unlock();
+                printf("------Rpcs\n");
                 HandleRpcs(tid_local);
             }
 
@@ -744,6 +745,7 @@ class DistanceServiceClient {
 
 
         int main(int argc, char** argv) {
+            bucket_cq = new CompletionQueue();
             std::string dataset_file_name;
             IndexServerCommandLineArgs* index_server_command_line_args = ParseIndexServerCommandLine(argc,
                     argv);
@@ -775,11 +777,13 @@ class DistanceServiceClient {
                 dataset_multiple_points.CreateMultiplePoints(dataset_file_name);
             } else if (mode == 2)
             {
+                std::cout<<"STRAT PARISING\n";
                 CreateDatasetFromBinaryFile(
                         dataset_file_name,
                         &dataset_size,
                         &dataset_dimensions,
                         &dataset);
+                       std::cout<<"STRAT PARISING2\n";
                 CreateMultiplePointsFromBinaryFile(
                         dataset_file_name,
                         &dataset_multiple_points);

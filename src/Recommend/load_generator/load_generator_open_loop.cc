@@ -283,10 +283,10 @@ class RecommenderServiceClient {
             float achieved_qps = (float)responses_recvd->AtomicallyReadCount()/(float)time_duration;
 
             global_stats_mutex.lock();
-            PrintLatency(*global_stats,
-                    number_of_cf_servers,
-                    (util_requests->AtomicallyReadCount() - 1),
-                    responses_recvd->AtomicallyReadCount());
+            // PrintLatency(*global_stats,
+            //         number_of_cf_servers,
+            //         (util_requests->AtomicallyReadCount() - 1),
+            //         responses_recvd->AtomicallyReadCount());
 
             float query_cost = ComputeQueryCost(*global_stats, 
                     (util_requests->AtomicallyReadCount() - 1),

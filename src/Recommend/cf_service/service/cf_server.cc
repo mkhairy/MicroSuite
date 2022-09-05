@@ -37,7 +37,7 @@ std::mutex cf_mutex;
 unsigned int cf_parallelism = 0;
 
 int num_cores = 0, cf_server_number = 0, num_cf_servers = 0;
-CF* cf_matrix;
+CFType* cf_matrix;
 
 void ProcessRequest(CFRequest &request,
         CFResponse* reply)
@@ -45,6 +45,8 @@ void ProcessRequest(CFRequest &request,
     /* If the index server is asking for util info,
        it means the time period has expired, so 
        the cf must read /proc/stat to provide user, system, io, and idle times.*/
+
+    //    std::cout<<"ProcessRequest\n";
     if(request.util_request().util_request())
     {
         uint64_t user_time = 0, system_time = 0, io_time = 0, idle_time = 0;
@@ -270,15 +272,19 @@ int main(int argc, char** argv) {
     if ( (num_cores == -1) || (num_cores > GetNumProcs()) ) {
         num_cores = GetNumProcs();
     }
+
     cf_parallelism = num_cores;
     cf_server_number = atoi(argv[5]);
     num_cf_servers = atoi(argv[6]);
-
+    printf("step0\n");
     CreateDatasetFromFile(dataset_file_name, &dataset);
+    printf("step1\n");
+    auto p = mlpack::cf::NMFPolicy();
 
-    cf_matrix = new CF(dataset, amf::NMFALSFactorizer(), 5, 5);    
-    cf_matrix->Init();
-
+     printf("step1.1\n");
+    cf_matrix = new CFType(dataset, p, 5, 5);    
+    // cf_matrix->Init();
+    printf("step2\n");
     ServiceImpl server;
     server.Run();
     return 0;

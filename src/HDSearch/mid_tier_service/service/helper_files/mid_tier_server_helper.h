@@ -156,7 +156,7 @@ struct TMConfig {
     std::vector<std::thread> resp_thread_pool;
 };
 
-typedef std::map<uint64_t, ResponseMetaData> ResponseMap;
+typedef std:: unordered_map<uint64_t, ResponseMetaData> ResponseMap;
 
 /* Function converts the command line arguments into corresponding
    LSH parameters and gets the path to the dataset file that must be read

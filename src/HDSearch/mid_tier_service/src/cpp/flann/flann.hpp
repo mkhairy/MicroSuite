@@ -267,6 +267,8 @@ namespace flann
                         const SearchParams& params,
                         std::vector<std::vector<uint32_t> >* point_ids_vec) const
                 {
+
+                    // printf("flann1\n");
                     return nnIndex_->getPointIDs(queries, 
                             tables_of_vectors, 
                             bucket_server_id,

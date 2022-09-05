@@ -8,13 +8,13 @@
 #include "protoc_files/intersection.grpc.pb.h"
 
 void CreateIndexFromFile(const std::string dataset_file_name,
-        std::map<Docids, std::vector<Docids> >* index);
+        std::unordered_map<Docids, std::vector<Docids> >* index);
 
 void UnpackIntersectionServiceRequest(const intersection::IntersectionRequest &request,
         std::vector<Docids>* word_ids);
 
 bool ExtractDocids(const std::vector<Docids> &word_ids,
-        const std::map<Docids, std::vector<Docids> > &word_to_docids,
+        const std::unordered_map<Docids, std::vector<Docids> > &word_to_docids,
         std::vector<std::vector<Docids> >* doc_ids_for_all_words);
 
 void PackIntersectionServiceResponse(const std::vector<Docids> &intersection_res,

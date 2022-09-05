@@ -7,6 +7,7 @@
 #include "recommender_service/src/thread_safe_queue.cpp"
 #include "recommender_service/src/thread_safe_flag.cpp"
 #include "recommender_service/src/atomics.cpp"
+#include <unordered_map>
 
 #define CHECK(condition, error_message) if (!condition) {std::cerr << __FILE__ << ": " << __LINE__ << ": " << error_message << "\n"; exit(-1);}
 
@@ -95,7 +96,7 @@ struct TMConfig {
 };
 
 // uint64_t refers to the void* to the request's tag - i.e its unique id
-typedef std::map<uint64_t, ResponseMetaData> ResponseMap;
+typedef std::unordered_map<uint64_t, ResponseMetaData> ResponseMap;
 
 /* Bucket server IPs are taken in via a file. This file must be read,
    and the bucket server IPs must be stored in a vector of strings. 

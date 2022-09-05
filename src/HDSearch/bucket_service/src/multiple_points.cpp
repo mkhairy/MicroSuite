@@ -147,6 +147,8 @@ Point& MultiplePoints::GetPointAtBack()
 void MultiplePoints::SetPoint(const unsigned int index, 
         const Point &point)
 {
+        // std::cout<<"Size " << multiple_points_.size() << " " << index <<std::endl;
+
     CHECK((multiple_points_.size() >= index), "ERROR: Trying to add point to a non-existent MultiplePoints index\n");
     multiple_points_[index] = point;
 }

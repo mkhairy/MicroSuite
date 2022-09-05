@@ -267,10 +267,11 @@ class RouterServiceClient {
             //To calculate max throughput of the system.
             uint64_t requests_sent = 0;
             double curr_time = (double)GetTimeInMicro();
-            double warm_up = curr_time + double(20*1000000);
+            double warm_up = curr_time + double(00*1000000);
             double exit_time = warm_up + double((time_duration)*1000000);
             bool flag = false;
             int itr = 0;
+               printf("Start WARMUP\n");
             while(curr_time < warm_up) {
                 outstanding_mutex.lock();
                 if (outstanding < qps) {
@@ -335,6 +336,7 @@ class RouterServiceClient {
             get_cnt = 0;
             set_cnt = 0;
             operation = 1;
+            printf("FINISH WARMUP\n");
             if (get_ratio >= set_ratio) {
                 get_cnt = (get_cnt + 1) % (get_ratio + 1);
             }

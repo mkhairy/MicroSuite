@@ -32,7 +32,7 @@ std::string ip_port = "", dataset_file_name = "";
 std::mutex intersection_mutex;
 unsigned int intersection_srv_parallelism = 1, intersection_srv_no = 0, num_intersection_srvs = 1;
 
-std::map<Docids, std::vector<Docids>> word_to_docids;
+std::unordered_map<Docids, std::vector<Docids>> word_to_docids;
 
 void ProcessRequest(IntersectionRequest &request,
         IntersectionResponse* reply)
@@ -89,6 +89,7 @@ void ProcessRequest(IntersectionRequest &request,
        doc ids.*/
     start_time = GetTimeInMicro();
     std::vector<std::vector<Docids> > doc_ids_for_all_words;
+    doc_ids_for_all_words.reserve(600);
     bool res = ExtractDocids(word_ids,
             word_to_docids,
             &doc_ids_for_all_words);
@@ -308,6 +309,7 @@ int main(int argc, char** argv) {
     }
 
     ServiceImpl server;
+    std::cout<<"RUNING\n";
     server.Run();
 
     return 0;

@@ -14,6 +14,8 @@
 
 typedef arma::mat Matrix;
 
+
+
 struct Request {
     int user = 0;
     int item = 0;
@@ -26,7 +28,7 @@ void UnpackCFServiceRequest(const collaborative_filtering::CFRequest &request,
         Request* user_item);
 
 void CalculateRating(const Request &user_item,
-        mlpack::cf::CF* cf_matrix,
+        mlpack::cf::CFType* cf_matrix,
         float* rating);
 
 void PackCFServiceResponse(const float rating,

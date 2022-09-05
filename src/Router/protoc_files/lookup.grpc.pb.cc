@@ -5,14 +5,20 @@
 #include "lookup.pb.h"
 #include "lookup.grpc.pb.h"
 
-#include <grpc++/impl/codegen/async_stream.h>
-#include <grpc++/impl/codegen/async_unary_call.h>
-#include <grpc++/impl/codegen/channel_interface.h>
-#include <grpc++/impl/codegen/client_unary_call.h>
-#include <grpc++/impl/codegen/method_handler_impl.h>
-#include <grpc++/impl/codegen/rpc_service_method.h>
-#include <grpc++/impl/codegen/service_type.h>
-#include <grpc++/impl/codegen/sync_stream.h>
+#include <functional>
+#include <grpcpp/impl/codegen/async_stream.h>
+#include <grpcpp/impl/codegen/async_unary_call.h>
+#include <grpcpp/impl/codegen/channel_interface.h>
+#include <grpcpp/impl/codegen/client_unary_call.h>
+#include <grpcpp/impl/codegen/client_callback.h>
+#include <grpcpp/impl/codegen/message_allocator.h>
+#include <grpcpp/impl/codegen/method_handler.h>
+#include <grpcpp/impl/codegen/rpc_service_method.h>
+#include <grpcpp/impl/codegen/server_callback.h>
+#include <grpcpp/impl/codegen/server_callback_handlers.h>
+#include <grpcpp/impl/codegen/server_context.h>
+#include <grpcpp/impl/codegen/service_type.h>
+#include <grpcpp/impl/codegen/sync_stream.h>
 namespace lookup {
 
 static const char* LookupService_method_names[] = {
@@ -20,32 +26,49 @@ static const char* LookupService_method_names[] = {
 };
 
 std::unique_ptr< LookupService::Stub> LookupService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
-  std::unique_ptr< LookupService::Stub> stub(new LookupService::Stub(channel));
+  (void)options;
+  std::unique_ptr< LookupService::Stub> stub(new LookupService::Stub(channel, options));
   return stub;
 }
 
-LookupService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_KeyLookup_(LookupService_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+LookupService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
+  : channel_(channel), rpcmethod_KeyLookup_(LookupService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status LookupService::Stub::KeyLookup(::grpc::ClientContext* context, const ::lookup::Key& request, ::lookup::Value* response) {
-  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_KeyLookup_, context, request, response);
+  return ::grpc::internal::BlockingUnaryCall< ::lookup::Key, ::lookup::Value, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_KeyLookup_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::lookup::Value>* LookupService::Stub::AsyncKeyLookupRaw(::grpc::ClientContext* context, const ::lookup::Key& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::lookup::Value>::Create(channel_.get(), cq, rpcmethod_KeyLookup_, context, request, true);
+void LookupService::Stub::experimental_async::KeyLookup(::grpc::ClientContext* context, const ::lookup::Key* request, ::lookup::Value* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::lookup::Key, ::lookup::Value, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_KeyLookup_, context, request, response, std::move(f));
+}
+
+void LookupService::Stub::experimental_async::KeyLookup(::grpc::ClientContext* context, const ::lookup::Key* request, ::lookup::Value* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_KeyLookup_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::lookup::Value>* LookupService::Stub::PrepareAsyncKeyLookupRaw(::grpc::ClientContext* context, const ::lookup::Key& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::lookup::Value>::Create(channel_.get(), cq, rpcmethod_KeyLookup_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::lookup::Value, ::lookup::Key, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_KeyLookup_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::lookup::Value>* LookupService::Stub::AsyncKeyLookupRaw(::grpc::ClientContext* context, const ::lookup::Key& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncKeyLookupRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 LookupService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       LookupService_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< LookupService::Service, ::lookup::Key, ::lookup::Value>(
-          std::mem_fn(&LookupService::Service::KeyLookup), this)));
+      new ::grpc::internal::RpcMethodHandler< LookupService::Service, ::lookup::Key, ::lookup::Value, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](LookupService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::lookup::Key* req,
+             ::lookup::Value* resp) {
+               return service->KeyLookup(ctx, req, resp);
+             }, this)));
 }
 
 LookupService::Service::~Service() {

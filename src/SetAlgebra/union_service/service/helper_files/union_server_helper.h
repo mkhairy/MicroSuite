@@ -96,7 +96,7 @@ struct TMConfig {
 };
 
 // uint64_t refers to the void* to the request's tag - i.e its unique id
-typedef std::map<uint64_t, ResponseMetaData> ResponseMap;
+typedef std::unordered_map<uint64_t, ResponseMetaData> ResponseMap;
 
 /* Bucket server IPs are taken in via a file. This file must be read,
    and the intersection server IPs must be stored in a vector of strings. 

@@ -51,9 +51,13 @@ void Get(memcached_st* memc,
             return;
         }
         *(value) = std::string(retrieved_value);
-    }
+            //  std::cout<<"Get : " <<key << "  " <<*(value) <<std::endl;
+         
+         
+          }
     else {
         *(value) = "nack";
+        // std::cout<<"Get : " <<key << "  " <<*(value) <<std::endl;
     }
     free(retrieved_value);
 }
@@ -96,9 +100,11 @@ void Set(memcached_st* memc,
     if (*rc == MEMCACHED_SUCCESS)
     {
         *value = "ack";
+        //  std::cout<<"SET : " <<key << "  " <<*(value) <<std::endl;
     }
     else {
         *value = "nack";
+        //  std::cout<<"SET : " <<key << "  " <<*(value) <<std::endl;
     }
 }
 

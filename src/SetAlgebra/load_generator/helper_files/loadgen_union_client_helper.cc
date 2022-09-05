@@ -37,7 +37,8 @@ void CreateQueriesFromFile(std::string queries_file_name,
         
         queries->emplace_back(std::vector<Wordids>());
         for(auto& s: tokens)
-        {
+        {   
+            // std::cout<<s <<std::endl;
             queries->back().emplace_back(std::stoul(s, nullptr, 0));
         }
     }

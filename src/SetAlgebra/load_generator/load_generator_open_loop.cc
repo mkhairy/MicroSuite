@@ -180,7 +180,7 @@ class UnionServiceClient {
 
                 } else {
                     sleep(2);
-                    std::string s = "/home/akshitha/highdimensionalsearch/set_operations/load_generator/kill_union_server_empty " + ip;
+                    std::string s = "./kill_union_server_empty " + ip;
                     char* cmd = new char[s.length() + 1];
                     std::strcpy(cmd, s.c_str());
                     ExecuteShellCommand(cmd);

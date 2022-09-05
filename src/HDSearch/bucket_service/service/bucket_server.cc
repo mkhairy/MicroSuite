@@ -291,6 +291,7 @@ int main(int argc, char** argv) {
     {
         CreatePointsFromFile(dataset_file_name, &dataset);
     } else if (mode == 2) {
+        printf("BIN\n");
         CreateDatasetFromBinaryFile(dataset_file_name, 
                 bucket_server_num,
                 num_bucket_servers,

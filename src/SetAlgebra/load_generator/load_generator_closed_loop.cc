@@ -224,6 +224,7 @@ class UnionServiceClient {
             struct LoadGenCommandLineArgs* load_gen_command_line_args = new struct LoadGenCommandLineArgs();
             load_gen_command_line_args = ParseLoadGenCommandLine(argc,
                     argv);
+                    std::cout<<"starting\n";
             queries_file_name = load_gen_command_line_args->queries_file_name;
             result_file_name = load_gen_command_line_args->result_file_name;
             uint64_t time_duration = load_gen_command_line_args->time_duration;
@@ -306,6 +307,7 @@ class UnionServiceClient {
 
                     }
                     requests_sent++;
+                    // if(requests_sent >3000) break;
                     query_id = rand() % queries_size;
                     query = queries[query_id];
                 }

@@ -30,6 +30,7 @@ void CreateDatasetFromBinaryFile(const std::string &file_name,
     stream_to_get_size.seekg(0, std::ios::end);
     long size = stream_to_get_size.tellg();
     long dataset_size = (size/sizeof(float))/dataset_dimensions;
+    std::cout<<"Size " << dataset_size <<std::endl;
     CHECK((dataset_size >= 0), "ERROR: Negative number of points in the dataset\n");
     /* Initialize dataset to contain 0s, 
        this is so that we can directly index every point/value after this.*/
@@ -47,7 +48,7 @@ void CreateDatasetFromBinaryFile(const std::string &file_name,
     if (bucket_server_num == (num_bucket_servers - 1)) {
         end_index = dataset_size;
     }
-
+std::cout<<"shard " << shard_size << " " << start_index <<std::endl;
     for(long i = start_index; i < end_index; i++)
     {
         if(fread(values, sizeof(float), dataset_dimensions, dataset_binary) == dataset_dimensions)
@@ -109,13 +110,16 @@ void UnpackQueriesAsync(const bucket::NearestNeighborRequest &request,
 {
     Point p(dataset.GetPointAtIndex(0).GetSize(), 0.0);
     uint64_t value = 0;
+    // std::cout<<"value : ";
     for(int i = 0; i < request.queries_size(); i++)
     {
         value = request.queries(i);
+        // std::cout<<" "<<value << " ";
         reply->add_queries(value);
         p = dataset.GetPointAtIndex(value);
         queries->SetPoint(i, p);
     }
+    // std::cout<<std::endl;
 
 }
 

@@ -3,6 +3,7 @@
 void Point::Resize(const int size, const float value)
 {
     point_.assign(size, value);
+    // std::cout<<"size :" << size << std::endl;
 }
 void Point::AddValueToIndex(const int index, const float value)
 {
@@ -22,6 +23,7 @@ void Point::CreatePointFromFloatArray(const float float_arr[],
     {
         point_[i] = float_arr[i];
     }
+    //  std::cout<<"size :" << float_arr_size << std::endl;
 }
 
 unsigned Point::GetSize() const

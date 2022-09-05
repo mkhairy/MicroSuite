@@ -1,8 +1,8 @@
 HDS_PATH = ../../
 CXX = g++
-CPPFLAGS += -I/usr/local/include -pthread -O3 -I$(HDS_PATH) -Wall -fopenmp -I../../
-CXXFLAGS += -std=c++17 -O3 -mavx2 -mavx -fopenmp  -DMKL_ILP64 -m64 -I/opt/intel/mkl/include -I../../
-LDFLAGS += -L/usr/local/lib -lgrpc++ -lgrpc -lgpr -lprotobuf -lpthread -I /usr/local/include -lflann -fopenmp -L/usr/lib64 -lstdc++ -lssl -lcrypto -fopenmp -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_intel_ilp64.a /opt/intel/mkl/lib/intel64/libmkl_gnu_thread.a /opt/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -I../../ -lboost_system -lboost_thread
+CPPFLAGS += -I/usr/local/include -pthread -O3 -I$(HDS_PATH) -Wall -fopenmp -I../../ -I/home/aalawneh/boost_1_65_1
+CXXFLAGS += -std=c++17 -O3 -mavx2 -mavx -fopenmp  -DMKL_ILP64 -m64 -I~/intel/mkl/include -I../../ -I/home/aalawneh/boost_1_65_1
+LDFLAGS += -L/home/aalawneh/boost_1_65_1/stage/lib -lboost_system  -L/home/aalawneh/boost_1_65_1/stage/lib -lboost_thread -L~/micro/grpc/lib/ `pkg-config --libs grpc++ grpc` -lgpr -lprotobuf -lpthread -I /usr/local/include -lflann -fopenmp -L/usr/lib64 -lstdc++ -lssl -lcrypto -fopenmp -Wl,--start-group ~/intel/mkl/lib/intel64/libmkl_intel_ilp64.a ~/intel/mkl/lib/intel64/libmkl_gnu_thread.a ~/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -I../../ 
 PROTOC = protoc
 GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
@@ -27,7 +27,7 @@ mid_tier_server: $(PROTOS_PATH)/bucket.pb.o $(PROTOS_PATH)/bucket.grpc.pb.o $(PR
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=$(PROTOS_PATH) $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h mid_tier_server
+	rm -f *.o *.pb.cc *.pb.h mid_tier_server helper_files/*.o
 
 
 # The following is to test your system and ensure a smoother experience.

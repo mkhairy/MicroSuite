@@ -1,8 +1,8 @@
 HDS_PATH = ../../
 CXX = g++
 CPPFLAGS += -I/usr/local/include -pthread -I$(HDS_PATH) -g
-CXXFLAGS += -std=c++17 -O3 -mavx2 -mavx -fopenmp  -DMKL_ILP64 -m64 -I/opt/intel/mkl/include -I$(HDS_PATH) -g
-LDFLAGS += -L/usr/local/lib -lgrpc++ -lgrpc -lgpr -lprotobuf -lpthread -fopenmp -Wl,--start-group /opt/intel/mkl/lib/intel64/libmkl_intel_ilp64.a /opt/intel/mkl/lib/intel64/libmkl_gnu_thread.a /opt/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -I$(HDS_PATH) -lmemcached
+CXXFLAGS += -std=c++17 -O3 -mavx2 -mavx -fopenmp  -DMKL_ILP64 -m64 -I~/intel/mkl/include -I$(HDS_PATH) -g
+LDFLAGS += -L~/micro/grpc/lib/ `pkg-config --libs grpc++ grpc`  -lgpr -lprotobuf -lpthread -fopenmp -Wl,--start-group ~/intel/mkl/lib/intel64/libmkl_intel_ilp64.a ~/intel/mkl/lib/intel64/libmkl_gnu_thread.a ~/intel/mkl/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -I$(HDS_PATH) -lmemcached
 PROTOC = protoc
 GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH ?= `which $(GRPC_CPP_PLUGIN)`
